@@ -1,16 +1,27 @@
 package com.darksoldier1404.dsp;
 
+import com.darksoldier1404.dsp.commands.DSPCommand;
+import com.darksoldier1404.dsp.events.DSPEvent;
 import com.darksoldier1404.duc.UniversalCore;
 import com.darksoldier1404.duc.utils.ConfigUtils;
-import com.darksoldier1404.duc.utils.UpdateChecker;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class SimplePrefix extends JavaPlugin {
-    private UniversalCore core;
-    private static SimplePrefix plugin;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
-    public static SimplePrefix getPlugin() {
+@SuppressWarnings("all")
+public class SimplePrefix extends JavaPlugin {
+    public UniversalCore core;
+    private static SimplePrefix plugin;
+    public YamlConfiguration config;
+    public Map<UUID, YamlConfiguration> udata = new HashMap<>();
+    public String prefix;
+
+    public static SimplePrefix getInstance() {
         return plugin;
     }
 
@@ -24,8 +35,11 @@ public class SimplePrefix extends JavaPlugin {
             return;
         }
         core = (UniversalCore) pl;
-        ConfigUtils.loadDefaultPluginConfig(plugin);
-        UpdateChecker.check(plugin);
+        config = ConfigUtils.loadDefaultPluginConfig(plugin);
+        prefix = ChatColor.translateAlternateColorCodes('&', config.getString("Settings.prefix"));
+
+        plugin.getServer().getPluginManager().registerEvents(new DSPEvent(), plugin);
+        getCommand("칭호").setExecutor(new DSPCommand());
     }
 
     public void onDisable() {
