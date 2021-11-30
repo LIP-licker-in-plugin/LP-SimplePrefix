@@ -18,6 +18,7 @@ public class SimplePrefix extends JavaPlugin {
     public UniversalCore core;
     private static SimplePrefix plugin;
     public YamlConfiguration config;
+    public YamlConfiguration defaultData = new YamlConfiguration();
     public Map<UUID, YamlConfiguration> udata = new HashMap<>();
     public String prefix;
 
