@@ -9,14 +9,14 @@ tasks.withType(JavaCompile) {
 }
 
 group 'github.com/darksoldier1404'
-version = '1.0.0.29'
+version = '1.0.0.31'
 
 jar {
-    destinationDirectory.set(file("C:\\Minecraft Servers\\1.17.1 Play Ground\\plugins\\"))
+    destinationDirectory.set(file("C:\\Minecraft Servers\\1.18 Play Ground\\plugins\\"))
 }
 
 task deleteMyFile(type: Delete) {
-    delete "C:\\Minecraft Servers\\1.17.1 Play Ground\\plugins\\DP-SimplePrefix-" + version + ".jar"
+    delete "C:\\Minecraft Servers\\1.18 Play Ground\\plugins\\DP-SimplePrefix-" + version + ".jar"
 }
 
 task DS_BUILD {
@@ -64,13 +64,15 @@ repositories {
         allowInsecureProtocol = true
     }
 }
-
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+}
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
-    compileOnly "io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT"
-    compileOnly 'org.spigotmc:spigot:1.17-R0.1-SNAPSHOT'
-    compileOnly 'com.darksoldier1404.duc:DP-UniversalCore:1.0.2.64'
+    compileOnly "io.papermc.paper:paper-api:1.18-R0.1-SNAPSHOT"
+    compileOnly 'org.spigotmc:spigot:1.18-R0.1-SNAPSHOT'
+    compileOnly 'com.darksoldier1404.duc:DP-UniversalCore:1.0.3.82'
 }
 
 test {
