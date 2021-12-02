@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("all")
 public class DSPCommand implements CommandExecutor, TabCompleter {
     private final String prefix = SimplePrefix.getInstance().prefix;
 

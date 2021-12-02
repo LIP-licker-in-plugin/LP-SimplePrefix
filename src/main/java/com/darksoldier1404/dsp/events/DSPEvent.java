@@ -19,6 +19,7 @@ import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+@SuppressWarnings("all")
 public class DSPEvent implements Listener {
     private final SimplePrefix plugin = SimplePrefix.getInstance();
 
