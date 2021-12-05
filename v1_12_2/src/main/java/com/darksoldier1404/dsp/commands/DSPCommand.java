@@ -13,35 +13,21 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-
-/**
-[관리자 커맨드]
-/칭호 생성 <칭호> - 칭호를 생성합니다.
-/칭호 설정 <칭호> - 화면에 보이게될 칭호를 설정합니다.
-/칭호 삭제 <칭호> - 칭호를 삭제합니다.
-/칭호 쿠폰 <칭호> - 해당 칭호의 쿠폰 아이템을 받습니다. 우클릭시 칭호를 획득하며 중복 획득은 불가능합니다.
-/칭호 모든목록 - 모든 칭호 목록을 확인합니다.
-[유저 커맨드]
-/칭호 장착 <칭호> - 칭호를 장착합니다.
-/칭호 장착해제 - 칭호를 장착해제 합니다.
-/칭호 목록 - 보유중인 칭호 목록을 확인합니다.
-**/
-
-
 @SuppressWarnings("all")
 public class DSPCommand implements CommandExecutor, TabCompleter {
     private final String prefix = SimplePrefix.getInstance().prefix;
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!(sender instanceof Player p)) {
+        if (!(sender instanceof Player)) {
             sender.sendMessage(prefix + "§c플레이어만 사용 가능한 명령어 입니다.");
             return false;
         }
+        Player p = (Player) sender;
         if (args.length == 0) {
             if (p.isOp()) {
                 sender.sendMessage(prefix + "/칭호 생성 <칭호> - 칭호를 생성합니다.");
-                sender.sendMessage(prefix + "/칭호 설정 <칭호> - 화면에 보이게될 칭호를 설정합니다.");
+                sender.sendMessage(prefix + "/칭호 설정 <칭호> [보여질 칭호] - 화면에 보이게될 칭호를 설정합니다.");
                 sender.sendMessage(prefix + "/칭호 삭제 <칭호> - 칭호를 삭제합니다.");
                 sender.sendMessage(prefix + "/칭호 쿠폰 <칭호> - 해당 칭호의 쿠폰 아이템을 받습니다. 우클릭시 칭호를 획득하며 중복 획득은 불가능합니다.");
                 sender.sendMessage(prefix + "/칭호 모든목록 - 모든 칭호 목록을 확인합니다.");
@@ -89,7 +75,7 @@ public class DSPCommand implements CommandExecutor, TabCompleter {
                     sender.sendMessage(prefix + "§c/칭호 설정 <칭호>");
                     return false;
                 }
-                DSPFunction.openSetPrefixGUI(p, args[1]);
+                DSPFunction.setPrefix(p, args[1], args);
                 return false;
             }
             if (args[0].equals("삭제")) {
