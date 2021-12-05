@@ -15,14 +15,7 @@ configurations {
 }
 repositories {
     mavenCentral()
-    maven { url "https://papermc.io/repo/repository/maven-public/" }
-    maven {
-        name "essentialsx-releases"
-        url "https://repo.essentialsx.net/releases/"
-    }
-    maven {
-        url "https://org.bstats/bstats-bukkit"
-    }
+    maven { url "https://repo.dmulloy2.net/repository/public/" }
     maven {
         url 'https://repo.spring.io/plugins-release/'
     }
@@ -36,10 +29,8 @@ dependencies {
     implementation 'org.jetbrains:annotations:20.1.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
-    compileOnly "io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT"
-    compileOnly 'net.essentialsx:EssentialsX:2.19.0'
-    compileOnly "org.bstats:bstats-bukkit:2.2.1"
-    compileOnly 'com.darksoldier1404.duc:DP-UniversalCore:1.0.3.123:1.17.1'
+    compileOnly 'org.spigotmc:spigot:1.15.2-R0.1-SNAPSHOT'
+    compileOnly 'com.darksoldier1404.duc:DP-UniversalCore:1.0.3.123:1.15.2'
 }
 
 test {
