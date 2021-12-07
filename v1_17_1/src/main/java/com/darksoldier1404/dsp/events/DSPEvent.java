@@ -19,6 +19,9 @@ import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import static org.bukkit.event.block.Action.RIGHT_CLICK_AIR;
+import static org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK;
+
 @SuppressWarnings("all")
 public class DSPEvent implements Listener {
     private final SimplePrefix plugin = SimplePrefix.getInstance();
@@ -59,7 +62,7 @@ public class DSPEvent implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
-        if (!e.getAction().isRightClick()) return;
+        if (!(e.getAction() == RIGHT_CLICK_BLOCK) || !(e.getAction() == RIGHT_CLICK_AIR)) return;
         if (e.getHand() == EquipmentSlot.OFF_HAND) return;
         if (e.getItem() == null) return;
         ItemStack item = e.getItem();
