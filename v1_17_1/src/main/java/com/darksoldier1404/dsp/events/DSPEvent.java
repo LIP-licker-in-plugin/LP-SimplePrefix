@@ -19,8 +19,7 @@ import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
-import static org.bukkit.event.block.Action.RIGHT_CLICK_AIR;
-import static org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK;
+import static org.bukkit.event.block.Action.*;
 
 @SuppressWarnings("all")
 public class DSPEvent implements Listener {
@@ -62,7 +61,7 @@ public class DSPEvent implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
-        if (!(e.getAction() == RIGHT_CLICK_BLOCK) || !(e.getAction() == RIGHT_CLICK_AIR)) return;
+        if(e.getAction().equals(LEFT_CLICK_AIR) || e.getAction().equals(LEFT_CLICK_BLOCK)) return;
         if (e.getHand() == EquipmentSlot.OFF_HAND) return;
         if (e.getItem() == null) return;
         ItemStack item = e.getItem();
