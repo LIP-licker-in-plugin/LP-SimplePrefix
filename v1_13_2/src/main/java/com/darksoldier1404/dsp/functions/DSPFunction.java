@@ -109,7 +109,7 @@ public class DSPFunction {
             return false;
         }
         List<String> list;
-        if(data.getList("Settings.PrefixList") == null) {
+        if(data.getStringList("Player.PrefixList") == null || data.getStringList("Player.PrefixList").isEmpty()) {
             list = new ArrayList<>();
         }else{
             list = (List<String>) data.getList("Player.PrefixList");
