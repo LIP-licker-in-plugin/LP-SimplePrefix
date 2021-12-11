@@ -73,6 +73,7 @@ public class DSPEvent implements Listener {
                 if (s.equals(name)) {
                     if (DSPFunction.givePrefix(e.getPlayer(), name)) {
                         item.setAmount(item.getAmount() - 1);
+                        return;
                     }
                 }
             });
