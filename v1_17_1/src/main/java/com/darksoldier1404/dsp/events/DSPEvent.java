@@ -19,6 +19,8 @@ import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
+
 import static org.bukkit.event.block.Action.*;
 
 @SuppressWarnings("all")
@@ -29,6 +31,10 @@ public class DSPEvent implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         plugin.udata.put(e.getPlayer().getUniqueId(), ConfigUtils.initUserData(plugin, e.getPlayer().getUniqueId().toString(), "users", plugin.defaultData));
         ConfigUtils.saveCustomData(plugin, plugin.udata.get(e.getPlayer().getUniqueId()), e.getPlayer().getUniqueId().toString(), "users");
+
+        plugin.udata.keySet().forEach(uuid -> {
+            System.out.println("join : " + uuid);
+        });
     }
 
     @EventHandler
@@ -51,6 +57,7 @@ public class DSPEvent implements Listener {
         Player p = e.getPlayer();
         if (!(plugin.udata.get(p.getUniqueId()).getString("Player.Prefix") == null)) {
             String name = plugin.udata.get(p.getUniqueId()).getString("Player.Prefix") == null ? "" : plugin.udata.get(p.getUniqueId()).getString("Player.Prefix");
+            if(name.equals("")) return;
             plugin.config.getConfigurationSection("Settings.PrefixList").getKeys(false).forEach(s -> {
                 if (s.equals(name)) {
                     e.setFormat(ChatColor.translateAlternateColorCodes('&', plugin.config.getString("Settings.PrefixList." + name)) + e.getFormat());
@@ -62,21 +69,28 @@ public class DSPEvent implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
-        if(e.getAction().equals(LEFT_CLICK_AIR) || e.getAction().equals(LEFT_CLICK_BLOCK)) return;
+        if (e.getAction().equals(LEFT_CLICK_AIR) || e.getAction().equals(LEFT_CLICK_BLOCK)) return;
         if (e.getHand() == EquipmentSlot.OFF_HAND) return;
         if (e.getItem() == null) return;
         ItemStack item = e.getItem();
         if (!item.hasItemMeta()) return;
         if (NBT.hasTagKey(item, "dsp.prefix")) {
+            Player p = e.getPlayer();
             String name = NBT.getStringTag(item, "dsp.prefix");
-            plugin.config.getConfigurationSection("Settings.PrefixList").getKeys(false).forEach(s -> {
+            boolean b = false;
+            for (String s : plugin.config.getConfigurationSection("Settings.PrefixList").getKeys(false)) {
                 if (s.equals(name)) {
-                    if (DSPFunction.givePrefix(e.getPlayer(), name)) {
+                    if (DSPFunction.givePrefix(p, name)) {
                         item.setAmount(item.getAmount() - 1);
+                        b = true;
                         return;
                     }
                 }
-            });
+            }
+            if(!b) {
+                p.sendMessage(plugin.prefix + "존재하지 않는 칭호입니다.");
+                return;
+            }
         }
     }
 }

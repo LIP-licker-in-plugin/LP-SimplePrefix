@@ -74,7 +74,7 @@ public class DSPFunction {
         List<String> list = (List<String>) plugin.udata.get(p.getUniqueId()).getList("Player.PrefixList");
         for (String key : list) {
             String s = plugin.config.getString("Settings.PrefixList." + key);
-            if(s != null) {
+            if (s != null) {
                 p.sendMessage(prefix + key + " : " + ChatColor.translateAlternateColorCodes('&', s));
             }
         }
@@ -82,7 +82,7 @@ public class DSPFunction {
 
     public static void equipPrefix(Player p, String name) {
         YamlConfiguration data = plugin.udata.get(p.getUniqueId());
-        if(!(data.getList("Player.PrefixList") == null)) {
+        if (!(data.getList("Player.PrefixList") == null)) {
             try {
                 List<String> list = (List<String>) data.getList("Player.PrefixList");
                 if (list.contains(name)) {
@@ -126,7 +126,12 @@ public class DSPFunction {
             p.sendMessage(prefix + "이미 보유중인 칭호입니다.");
             return false;
         }
-        List<String> list = (List<String>) data.getList("Player.PrefixList") == null ? new ArrayList<>() : (List<String>) data.getList("Player.PrefixList");
+        List<String> list;
+        if(data.getList("Settings.PrefixList") == null) {
+            list = new ArrayList<>();
+        }else{
+            list = (List<String>) data.getList("Player.PrefixList");
+        }
         list.add(name);
         data.set("Player.PrefixList", list);
         p.sendMessage(prefix + name + " 칭호를 획득하였습니다.");
