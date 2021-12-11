@@ -112,7 +112,12 @@ public class DSPFunction {
             p.sendMessage(prefix + "이미 보유중인 칭호입니다.");
             return false;
         }
-        List<String> list = (List<String>) data.getList("Player.PrefixList") == null ? new ArrayList<>() : (List<String>) data.getList("Player.PrefixList");
+        List<String> list;
+        if(data.getList("Settings.PrefixList") == null) {
+            list = new ArrayList<>();
+        }else{
+            list = (List<String>) data.getList("Player.PrefixList");
+        }
         list.add(name);
         data.set("Player.PrefixList", list);
         p.sendMessage(prefix + name + " 칭호를 획득하였습니다.");
