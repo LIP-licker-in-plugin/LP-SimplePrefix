@@ -54,6 +54,7 @@ public class DSPEvent implements Listener {
             plugin.config.getConfigurationSection("Settings.PrefixList").getKeys(false).forEach(s -> {
                 if (s.equals(name)) {
                     e.setFormat(ChatColor.translateAlternateColorCodes('&', plugin.config.getString("Settings.PrefixList." + name)) + e.getFormat());
+                    return;
                 }
             });
         }
