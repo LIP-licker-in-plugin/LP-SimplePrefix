@@ -10,7 +10,7 @@ tasks.withType(JavaCompile) {
 }
 
 group 'github.com/darksoldier1404'
-version = '1.0.0.40'
+version = '1.0.0.42'
 
 task deleteMyFile(type: Delete) {
     delete "C:\\Minecraft Servers\\1.18 Play Ground\\plugins\\DP-SimplePrefix-" + version + ".jar"
@@ -77,7 +77,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
     compileOnly 'org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT'
-    compileOnly 'com.darksoldier1404.duc:DP-UniversalCore:1.0.3.123:1.18'
+    compileOnly 'com.darksoldier1404.duc:DP-UniversalCore:1.0.3.129:1.18'
 }
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))

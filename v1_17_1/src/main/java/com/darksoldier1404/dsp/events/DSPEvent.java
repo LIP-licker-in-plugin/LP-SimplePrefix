@@ -20,6 +20,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.bukkit.event.block.Action.*;
 
@@ -29,19 +30,19 @@ public class DSPEvent implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        plugin.udata.put(e.getPlayer().getUniqueId(), ConfigUtils.initUserData(plugin, e.getPlayer().getUniqueId().toString(), "users", plugin.defaultData));
-        ConfigUtils.saveCustomData(plugin, plugin.udata.get(e.getPlayer().getUniqueId()), e.getPlayer().getUniqueId().toString(), "users");
-
-        plugin.udata.keySet().forEach(uuid -> {
-            System.out.println("join : " + uuid);
-        });
+        Player p = e.getPlayer();
+        UUID uuid = p.getUniqueId();
+        YamlConfiguration data = ConfigUtils.initUserData(plugin, uuid.toString(), "users");
+        plugin.udata.put(uuid, data);
+        ConfigUtils.saveCustomData(plugin, data, uuid.toString(), "users");
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-        YamlConfiguration data = plugin.udata.get(e.getPlayer().getUniqueId());
-        ConfigUtils.saveCustomData(plugin, data, e.getPlayer().getUniqueId().toString(), "users");
-        plugin.udata.remove(e.getPlayer().getUniqueId());
+        Player p = e.getPlayer();
+        YamlConfiguration data = plugin.udata.get(p.getUniqueId());
+        ConfigUtils.saveCustomData(plugin, data, p.getUniqueId().toString(), "users");
+        plugin.udata.remove(p.getUniqueId());
     }
 
     @EventHandler

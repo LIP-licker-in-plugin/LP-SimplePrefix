@@ -113,13 +113,13 @@ public class DSPFunction {
             return false;
         }
         List<String> list;
-        if(data.getList("Settings.PrefixList") == null) {
+        if(data.getStringList("Player.PrefixList") == null || data.getStringList("Player.PrefixList").isEmpty()) {
             list = new ArrayList<>();
         }else{
             list = (List<String>) data.getList("Player.PrefixList");
         }
         list.add(name);
-        data.set("Player.PrefixList", list);
+//        data.set("Player.PrefixList", list);
         p.sendMessage(prefix + name + " 칭호를 획득하였습니다.");
         ConfigUtils.saveCustomData(plugin, plugin.udata.get(p.getUniqueId()), p.getUniqueId().toString(), "users");
         return true;
