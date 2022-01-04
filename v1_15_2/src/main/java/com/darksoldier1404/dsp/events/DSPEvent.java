@@ -9,17 +9,14 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
-import static org.bukkit.event.block.Action.*;
+import static org.bukkit.event.block.Action.LEFT_CLICK_AIR;
 import static org.bukkit.event.block.Action.LEFT_CLICK_BLOCK;
 
 @SuppressWarnings("all")
@@ -40,30 +37,20 @@ public class DSPEvent implements Listener {
     }
 
     @EventHandler
-    public void onInventoryClose(InventoryCloseEvent e) {
-        if (e.getView().getType() == InventoryType.ANVIL) {
-            AnvilInventory inv = (AnvilInventory) e.getInventory();
-            System.out.println(inv.getRenameText());
-        }
-    }
-
-    @EventHandler
     public void onChat(PlayerChatEvent e) {
         Player p = e.getPlayer();
-        if (!(plugin.udata.get(p.getUniqueId()).getString("Player.Prefix") == null)) {
-            String name = plugin.udata.get(p.getUniqueId()).getString("Player.Prefix") == null ? "" : plugin.udata.get(p.getUniqueId()).getString("Player.Prefix");
-            plugin.config.getConfigurationSection("Settings.PrefixList").getKeys(false).forEach(s -> {
-                if (s.equals(name)) {
-                    e.setFormat(ChatColor.translateAlternateColorCodes('&', plugin.config.getString("Settings.PrefixList." + name)) + e.getFormat());
-                    return;
-                }
-            });
-        }
+        String name = plugin.udata.get(p.getUniqueId()).getString("Player.Prefix") == null ? DSPFunction.giveDefaultPrefix(p) : plugin.udata.get(p.getUniqueId()).getString("Player.Prefix");
+        plugin.config.getConfigurationSection("Settings.PrefixList").getKeys(false).forEach(s -> {
+            if (s.equals(name)) {
+                e.setFormat(ChatColor.translateAlternateColorCodes('&', plugin.config.getString("Settings.PrefixList." + name)) + e.getFormat());
+                return;
+            }
+        });
     }
 
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
-        if(e.getAction().equals(LEFT_CLICK_AIR) || e.getAction().equals(LEFT_CLICK_BLOCK)) return;
+        if (e.getAction().equals(LEFT_CLICK_AIR) || e.getAction().equals(LEFT_CLICK_BLOCK)) return;
         if (e.getHand() == EquipmentSlot.OFF_HAND) return;
         if (e.getItem() == null) return;
         ItemStack item = e.getItem();

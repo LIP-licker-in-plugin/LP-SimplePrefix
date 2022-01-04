@@ -9,20 +9,15 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
-import java.util.UUID;
-
-import static org.bukkit.event.block.Action.*;
+import static org.bukkit.event.block.Action.LEFT_CLICK_AIR;
+import static org.bukkit.event.block.Action.LEFT_CLICK_BLOCK;
 
 @SuppressWarnings("all")
 public class DSPEvent implements Listener {
@@ -30,42 +25,27 @@ public class DSPEvent implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        Player p = e.getPlayer();
-        UUID uuid = p.getUniqueId();
-        YamlConfiguration data = ConfigUtils.initUserData(plugin, uuid.toString(), "users");
-        plugin.udata.put(uuid, data);
-        ConfigUtils.saveCustomData(plugin, data, uuid.toString(), "users");
+        plugin.udata.put(e.getPlayer().getUniqueId(), ConfigUtils.initUserData(plugin, e.getPlayer().getUniqueId().toString(), "users"));
+        ConfigUtils.saveCustomData(plugin, plugin.udata.get(e.getPlayer().getUniqueId()), e.getPlayer().getUniqueId().toString(), "users");
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-        Player p = e.getPlayer();
-        YamlConfiguration data = plugin.udata.get(p.getUniqueId());
-        ConfigUtils.saveCustomData(plugin, data, p.getUniqueId().toString(), "users");
-        plugin.udata.remove(p.getUniqueId());
-    }
-
-    @EventHandler
-    public void onInventoryClose(InventoryCloseEvent e) {
-        if (e.getView().getType() == InventoryType.ANVIL) {
-            AnvilInventory inv = (AnvilInventory) e.getInventory();
-            System.out.println(inv.getRenameText());
-        }
+        YamlConfiguration data = plugin.udata.get(e.getPlayer().getUniqueId());
+        ConfigUtils.saveCustomData(plugin, data, e.getPlayer().getUniqueId().toString(), "users");
+        plugin.udata.remove(e.getPlayer().getUniqueId());
     }
 
     @EventHandler
     public void onChat(PlayerChatEvent e) {
         Player p = e.getPlayer();
-        if (!(plugin.udata.get(p.getUniqueId()).getString("Player.Prefix") == null)) {
-            String name = plugin.udata.get(p.getUniqueId()).getString("Player.Prefix") == null ? "" : plugin.udata.get(p.getUniqueId()).getString("Player.Prefix");
-            if(name.equals("")) return;
-            plugin.config.getConfigurationSection("Settings.PrefixList").getKeys(false).forEach(s -> {
-                if (s.equals(name)) {
-                    e.setFormat(ChatColor.translateAlternateColorCodes('&', plugin.config.getString("Settings.PrefixList." + name)) + e.getFormat());
-                    return;
-                }
-            });
-        }
+        String name = plugin.udata.get(p.getUniqueId()).getString("Player.Prefix") == null ? DSPFunction.giveDefaultPrefix(p) : plugin.udata.get(p.getUniqueId()).getString("Player.Prefix");
+        plugin.config.getConfigurationSection("Settings.PrefixList").getKeys(false).forEach(s -> {
+            if (s.equals(name)) {
+                e.setFormat(ChatColor.translateAlternateColorCodes('&', plugin.config.getString("Settings.PrefixList." + name)) + e.getFormat());
+                return;
+            }
+        });
     }
 
     @EventHandler
@@ -76,22 +56,15 @@ public class DSPEvent implements Listener {
         ItemStack item = e.getItem();
         if (!item.hasItemMeta()) return;
         if (NBT.hasTagKey(item, "dsp.prefix")) {
-            Player p = e.getPlayer();
             String name = NBT.getStringTag(item, "dsp.prefix");
-            boolean b = false;
-            for (String s : plugin.config.getConfigurationSection("Settings.PrefixList").getKeys(false)) {
+            plugin.config.getConfigurationSection("Settings.PrefixList").getKeys(false).forEach(s -> {
                 if (s.equals(name)) {
-                    if (DSPFunction.givePrefix(p, name)) {
+                    if (DSPFunction.givePrefix(e.getPlayer(), name)) {
                         item.setAmount(item.getAmount() - 1);
-                        b = true;
                         return;
                     }
                 }
-            }
-            if(!b) {
-                p.sendMessage(plugin.prefix + "존재하지 않는 칭호입니다.");
-                return;
-            }
+            });
         }
     }
 }
