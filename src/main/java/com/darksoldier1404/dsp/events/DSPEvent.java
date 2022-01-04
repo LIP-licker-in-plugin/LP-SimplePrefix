@@ -2,9 +2,9 @@ package com.darksoldier1404.dsp.events;
 
 import com.darksoldier1404.dsp.SimplePrefix;
 import com.darksoldier1404.dsp.functions.DSPFunction;
+import com.darksoldier1404.duc.utils.ColorUtils;
 import com.darksoldier1404.duc.utils.ConfigUtils;
 import com.darksoldier1404.duc.utils.NBT;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -42,7 +42,7 @@ public class DSPEvent implements Listener {
         String name = plugin.udata.get(p.getUniqueId()).getString("Player.Prefix") == null ? DSPFunction.giveDefaultPrefix(p) : plugin.udata.get(p.getUniqueId()).getString("Player.Prefix");
         plugin.config.getConfigurationSection("Settings.PrefixList").getKeys(false).forEach(s -> {
             if (s.equals(name)) {
-                e.setFormat(ChatColor.translateAlternateColorCodes('&', plugin.config.getString("Settings.PrefixList." + name)) + e.getFormat());
+                e.setFormat(ColorUtils.applyColor(plugin.config.getString("Settings.PrefixList." + name)) + e.getFormat());
                 return;
             }
         });

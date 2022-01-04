@@ -3,8 +3,8 @@ package com.darksoldier1404.dsp;
 import com.darksoldier1404.dsp.commands.DSPCommand;
 import com.darksoldier1404.dsp.events.DSPEvent;
 import com.darksoldier1404.duc.UniversalCore;
+import com.darksoldier1404.duc.utils.ColorUtils;
 import com.darksoldier1404.duc.utils.ConfigUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,7 +37,7 @@ public class SimplePrefix extends JavaPlugin {
         }
         core = (UniversalCore) pl;
         config = ConfigUtils.loadDefaultPluginConfig(plugin);
-        prefix = ChatColor.translateAlternateColorCodes('&', config.getString("Settings.prefix"));
+        prefix = ColorUtils.applyColor(config.getString("Settings.prefix"));
 
         plugin.getServer().getPluginManager().registerEvents(new DSPEvent(), plugin);
         getCommand("칭호").setExecutor(new DSPCommand());

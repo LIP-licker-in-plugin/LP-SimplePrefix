@@ -1,10 +1,10 @@
 package com.darksoldier1404.dsp.functions;
 
 import com.darksoldier1404.dsp.SimplePrefix;
+import com.darksoldier1404.duc.utils.ColorUtils;
 import com.darksoldier1404.duc.utils.ConfigUtils;
 import com.darksoldier1404.duc.utils.NBT;
 import net.wesjd.anvilgui.AnvilGUI;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -44,7 +44,7 @@ public class DSPFunction {
                 .onComplete((player, text) -> {                                    //called when the inventory output slot is clicked
                     plugin.config.set("Settings.PrefixList." + name, text);
                     ConfigUtils.savePluginConfig(plugin, plugin.config);
-                    player.sendMessage(prefix + name + "칭호가 설정되었습니다. : " + ChatColor.translateAlternateColorCodes('&', text));
+                    player.sendMessage(prefix + name + "칭호가 설정되었습니다. : " + ColorUtils.applyColor(text));
                     return AnvilGUI.Response.close();
                 })
                 .preventClose()                                                    //prevents the inventory from being closed
@@ -61,7 +61,7 @@ public class DSPFunction {
     public static void showAllPrefixList(Player p) {
         p.sendMessage(prefix + "<<< 모든 칭호 목록 >>>");
         for (String key : plugin.config.getConfigurationSection("Settings.PrefixList").getKeys(false)) {
-            p.sendMessage(prefix + key + " : " + ChatColor.translateAlternateColorCodes('&', plugin.config.getString("Settings.PrefixList." + key)));
+            p.sendMessage(prefix + key + " : " + ColorUtils.applyColor(plugin.config.getString("Settings.PrefixList." + key)));
         }
     }
 
@@ -75,7 +75,7 @@ public class DSPFunction {
         for (String key : list) {
             String s = plugin.config.getString("Settings.PrefixList." + key);
             if(s != null) {
-                p.sendMessage(prefix + key + " : " + ChatColor.translateAlternateColorCodes('&', s));
+                p.sendMessage(prefix + key + " : " + ColorUtils.applyColor(s));
             }
         }
     }
@@ -145,16 +145,16 @@ public class DSPFunction {
             ItemStack item = new ItemStack(Material.valueOf(plugin.config.getString("Settings.couponMaterial")));
             ItemMeta im = item.getItemMeta();
             // set display name with placeholder
-            im.setDisplayName(ChatColor.translateAlternateColorCodes('&', plugin.config.getString("Settings.couponCustomName").replace("%dsp.prefix%", prefix)));
+            im.setDisplayName(ColorUtils.applyColor(plugin.config.getString("Settings.couponCustomName").replace("%dsp.prefix%", prefix)));
             List<String> lore = plugin.config.getStringList("Settings.couponLores");
             for (int i = 0; i < lore.size(); i++) {
-                lore.set(i, ChatColor.translateAlternateColorCodes('&', lore.get(i).replace("%dsp.prefix%", prefix)));
+                lore.set(i, ColorUtils.applyColor(lore.get(i).replace("%dsp.prefix%", prefix)));
             }
             im.setLore(lore);
             item.setItemMeta(im);
             item = NBT.setStringTag(item, "dsp.prefix", name);
             p.getInventory().addItem(item);
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix) + "칭호 쿠폰을 발급하였습니다.");
+            p.sendMessage(ColorUtils.applyColor(prefix) + "칭호 쿠폰을 발급하였습니다.");
         }
     }
 
