@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*
- this plugin is using the API of AnvilGUI
+ this plugin is using net.wesjd.anvilgui.AnvilGUI API
  XD
  */
 @SuppressWarnings("all")
@@ -74,7 +74,7 @@ public class DSPFunction {
         List<String> list = (List<String>) plugin.udata.get(p.getUniqueId()).getList("Player.PrefixList");
         for (String key : list) {
             String s = plugin.config.getString("Settings.PrefixList." + key);
-            if (s != null) {
+            if(s != null) {
                 p.sendMessage(prefix + key + " : " + ChatColor.translateAlternateColorCodes('&', s));
             }
         }
@@ -82,7 +82,7 @@ public class DSPFunction {
 
     public static void equipPrefix(Player p, String name) {
         YamlConfiguration data = plugin.udata.get(p.getUniqueId());
-        if (!(data.getList("Player.PrefixList") == null)) {
+        if(!(data.getList("Player.PrefixList") == null)) {
             try {
                 List<String> list = (List<String>) data.getList("Player.PrefixList");
                 if (list.contains(name)) {
@@ -117,14 +117,7 @@ public class DSPFunction {
 
 
     public static boolean givePrefix(Player p, String name) {
-        System.out.println("==================================================");
-        plugin.udata.keySet().forEach(uuid -> {
-            System.out.println(uuid + " : " + plugin.udata.get(uuid).getList("Player.PrefixList"));
-        });
-        System.out.println("==================================================");
-
         YamlConfiguration data = plugin.udata.get(p.getUniqueId());
-
         if (data == null) {
             System.out.println("data is null");
             return false;
@@ -134,28 +127,13 @@ public class DSPFunction {
             return false;
         }
         List<String> list;
-        if (data.getStringList("Player.PrefixList") == null || data.getStringList("Player.PrefixList").isEmpty()) {
+        if(data.getStringList("Player.PrefixList") == null || data.getStringList("Player.PrefixList").isEmpty()) {
             list = new ArrayList<>();
-        } else {
+        }else{
             list = (List<String>) data.getList("Player.PrefixList");
         }
-        System.out.println("==================================================");
-        plugin.udata.keySet().forEach(uuid -> {
-            System.out.println(uuid + " : " + plugin.udata.get(uuid).getList("Player.PrefixList"));
-        });
-        System.out.println("==================================================");
         list.add(name);
-        System.out.println("==================================================");
-        plugin.udata.keySet().forEach(uuid -> {
-            System.out.println(uuid + " : " + plugin.udata.get(uuid).getList("Player.PrefixList"));
-        });
-        System.out.println("==================================================");
         data.set("Player.PrefixList", list);
-        System.out.println("==================================================");
-        plugin.udata.keySet().forEach(uuid -> {
-            System.out.println(uuid + " : " + plugin.udata.get(uuid).getList("Player.PrefixList"));
-        });
-        System.out.println("==================================================");
         p.sendMessage(prefix + name + " 칭호를 획득하였습니다.");
         ConfigUtils.saveCustomData(plugin, plugin.udata.get(p.getUniqueId()), p.getUniqueId().toString(), "users");
         return true;
@@ -178,5 +156,48 @@ public class DSPFunction {
             p.getInventory().addItem(item);
             p.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix) + "칭호 쿠폰을 발급하였습니다.");
         }
+    }
+
+    public static void setDefaultPrefix(Player p, String name) {
+        plugin.config.set("Settings.DefaultPrefix", name);
+        ConfigUtils.savePluginConfig(plugin, plugin.config);
+        p.sendMessage(prefix + name + " 칭호가 기본 칭호로 설정되었습니다.");
+        plugin.udata.values().forEach(data -> {
+            if (!(data.get("Player.PrefixList") != null && data.getList("Player.PrefixList").contains(name))) {
+                List<String> list;
+                if(data.getStringList("Player.PrefixList") == null || data.getStringList("Player.PrefixList").isEmpty()) {
+                    list = new ArrayList<>();
+                }else{
+                    list = (List<String>) data.getList("Player.PrefixList");
+                }
+                list.add(name);
+                data.set("Player.PrefixList", list);
+                if(data.getString("Player.Prefix") == null) {
+                    data.set("Player.Prefix", name);
+                }
+            }
+        });
+    }
+
+    public static String giveDefaultPrefix(Player p) {
+        if (plugin.config.getString("Settings.DefaultPrefix") == null) {
+            return "";
+        }
+        YamlConfiguration data = plugin.udata.get(p.getUniqueId());
+        String name = plugin.config.getString("Settings.DefaultPrefix");
+        if (!(data.get("Player.PrefixList") != null && data.getList("Player.PrefixList").contains(name))) {
+            List<String> list;
+            if(data.getStringList("Player.PrefixList") == null || data.getStringList("Player.PrefixList").isEmpty()) {
+                list = new ArrayList<>();
+            }else{
+                list = (List<String>) data.getList("Player.PrefixList");
+            }
+            list.add(name);
+            data.set("Player.PrefixList", list);
+            if(data.getString("Player.Prefix") == null) {
+                data.set("Player.Prefix", name);
+            }
+        }
+        return plugin.config.getString("Settings.PrefixList." + name);
     }
 }

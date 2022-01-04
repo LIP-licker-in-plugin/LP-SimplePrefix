@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*
- this plugin is using the API of AnvilGUI
+ this plugin is using net.wesjd.anvilgui.AnvilGUI API
  XD
  */
 @SuppressWarnings("all")
@@ -156,5 +156,48 @@ public class DSPFunction {
             p.getInventory().addItem(item);
             p.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix) + "칭호 쿠폰을 발급하였습니다.");
         }
+    }
+
+    public static void setDefaultPrefix(Player p, String name) {
+        plugin.config.set("Settings.DefaultPrefix", name);
+        ConfigUtils.savePluginConfig(plugin, plugin.config);
+        p.sendMessage(prefix + name + " 칭호가 기본 칭호로 설정되었습니다.");
+        plugin.udata.values().forEach(data -> {
+            if (!(data.get("Player.PrefixList") != null && data.getList("Player.PrefixList").contains(name))) {
+                List<String> list;
+                if(data.getStringList("Player.PrefixList") == null || data.getStringList("Player.PrefixList").isEmpty()) {
+                    list = new ArrayList<>();
+                }else{
+                    list = (List<String>) data.getList("Player.PrefixList");
+                }
+                list.add(name);
+                data.set("Player.PrefixList", list);
+                if(data.getString("Player.Prefix") == null) {
+                    data.set("Player.Prefix", name);
+                }
+            }
+        });
+    }
+
+    public static String giveDefaultPrefix(Player p) {
+        if (plugin.config.getString("Settings.DefaultPrefix") == null) {
+            return "";
+        }
+        YamlConfiguration data = plugin.udata.get(p.getUniqueId());
+        String name = plugin.config.getString("Settings.DefaultPrefix");
+        if (!(data.get("Player.PrefixList") != null && data.getList("Player.PrefixList").contains(name))) {
+            List<String> list;
+            if(data.getStringList("Player.PrefixList") == null || data.getStringList("Player.PrefixList").isEmpty()) {
+                list = new ArrayList<>();
+            }else{
+                list = (List<String>) data.getList("Player.PrefixList");
+            }
+            list.add(name);
+            data.set("Player.PrefixList", list);
+            if(data.getString("Player.Prefix") == null) {
+                data.set("Player.Prefix", name);
+            }
+        }
+        return plugin.config.getString("Settings.PrefixList." + name);
     }
 }
