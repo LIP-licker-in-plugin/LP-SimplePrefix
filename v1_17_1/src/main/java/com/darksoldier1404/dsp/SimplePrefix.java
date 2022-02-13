@@ -2,9 +2,9 @@ package com.darksoldier1404.dsp;
 
 import com.darksoldier1404.dsp.commands.DSPCommand;
 import com.darksoldier1404.dsp.events.DSPEvent;
-import com.darksoldier1404.duc.UniversalCore;
-import com.darksoldier1404.duc.utils.ColorUtils;
-import com.darksoldier1404.duc.utils.ConfigUtils;
+import com.darksoldier1404.dppc.DPPCore;
+import com.darksoldier1404.dppc.utils.ColorUtils;
+import com.darksoldier1404.dppc.utils.ConfigUtils;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @SuppressWarnings("all")
 public class SimplePrefix extends JavaPlugin {
-    public UniversalCore core;
+    public DPPCore core;
     private static SimplePrefix plugin;
     public YamlConfiguration config;
     public YamlConfiguration defaultData = new YamlConfiguration();
@@ -28,14 +28,14 @@ public class SimplePrefix extends JavaPlugin {
 
     public void onEnable() {
         plugin = this;
-        Plugin pl = getServer().getPluginManager().getPlugin("DP-UniversalCore");
+        Plugin pl = getServer().getPluginManager().getPlugin("DPP-Core");
         if(pl == null) {
-            getLogger().warning("DP-UniversalCore 플러그인이 설치되어있지 않습니다.");
+            getLogger().warning("DPP-Core 플러그인이 설치되어있지 않습니다.");
             getLogger().warning("DP-SimplePrefix 플러그인을 비활성화 합니다.");
             plugin.setEnabled(false);
             return;
         }
-        core = (UniversalCore) pl;
+        core = (DPPCore) pl;
         config = ConfigUtils.loadDefaultPluginConfig(plugin);
         prefix = ColorUtils.applyColor(config.getString("Settings.prefix"));
 

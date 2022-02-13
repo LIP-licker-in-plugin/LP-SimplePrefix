@@ -1,9 +1,9 @@
 package com.darksoldier1404.dsp.functions;
 
 import com.darksoldier1404.dsp.SimplePrefix;
-import com.darksoldier1404.duc.utils.ColorUtils;
-import com.darksoldier1404.duc.utils.ConfigUtils;
-import com.darksoldier1404.duc.utils.NBT;
+import com.darksoldier1404.dppc.utils.ColorUtils;
+import com.darksoldier1404.dppc.utils.ConfigUtils;
+import com.darksoldier1404.dppc.utils.NBT;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
