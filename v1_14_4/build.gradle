@@ -9,7 +9,7 @@ tasks.withType(JavaCompile) {
 }
 
 group 'github.com/darksoldier1404'
-version = '1.0.1.45'
+version = '1.0.1.48'
 configurations {
     jar.archiveName = 'DP-SimplePrefix-_' + name + '-' + version + '.jar'
 }
@@ -27,6 +27,7 @@ repositories {
         url "http://dpnw.site:8081/repository/maven-public/"
         allowInsecureProtocol = true
     }
+    maven { url = 'https://repo.codemc.io/repository/maven-snapshots/' }
 }
 
 dependencies {
@@ -34,7 +35,8 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
     compileOnly 'org.spigotmc:spigot:1.14.4-R0.1-SNAPSHOT'
-    compileOnly 'com.darksoldier1404.duc:DP-UniversalCore:1.14.4-SNAPSHOT'
+    compileOnly 'com.darksoldier1404.dppc:DPP-Core:1.14.4-SNAPSHOT'
+    compileOnly 'net.wesjd:anvilgui:1.5.3-SNAPSHOT'
 }
 
 test {

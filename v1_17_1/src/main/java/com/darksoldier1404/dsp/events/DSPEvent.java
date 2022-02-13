@@ -2,9 +2,9 @@ package com.darksoldier1404.dsp.events;
 
 import com.darksoldier1404.dsp.SimplePrefix;
 import com.darksoldier1404.dsp.functions.DSPFunction;
-import com.darksoldier1404.duc.utils.ColorUtils;
-import com.darksoldier1404.duc.utils.ConfigUtils;
-import com.darksoldier1404.duc.utils.NBT;
+import com.darksoldier1404.dppc.utils.ColorUtils;
+import com.darksoldier1404.dppc.utils.ConfigUtils;
+import com.darksoldier1404.dppc.utils.NBT;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

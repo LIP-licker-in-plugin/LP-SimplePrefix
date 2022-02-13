@@ -47,6 +47,7 @@ public class DSPCommand implements CommandExecutor, TabCompleter {
                 DSPFunction.equipPrefix(p, args[1]);
                 return false;
             }
+            sender.sendMessage(prefix + "/칭호 장착 <칭호> - 칭호를 장착합니다.");
             return false;
         }
         if (args[0].equals("장착해제")) {
@@ -54,6 +55,8 @@ public class DSPCommand implements CommandExecutor, TabCompleter {
                 DSPFunction.unequipPrefix(p);
                 return false;
             }
+            sender.sendMessage(prefix + "/칭호 장착해제 - 칭호를 장착해제 합니다.");
+            return false;
         }
         if (args[0].equals("목록")) {
             if (args.length == 1) {
