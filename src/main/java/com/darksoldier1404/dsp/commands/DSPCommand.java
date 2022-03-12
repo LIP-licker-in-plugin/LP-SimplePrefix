@@ -2,6 +2,7 @@ package com.darksoldier1404.dsp.commands;
 
 import com.darksoldier1404.dsp.SimplePrefix;
 import com.darksoldier1404.dsp.functions.DSPFunction;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -29,7 +30,7 @@ public class DSPCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage(prefix + "/칭호 생성 <칭호> - 칭호를 생성합니다.");
                 sender.sendMessage(prefix + "/칭호 설정 <칭호> - 화면에 보이게될 칭호를 설정합니다.");
                 sender.sendMessage(prefix + "/칭호 삭제 <칭호> - 칭호를 삭제합니다.");
-                sender.sendMessage(prefix + "/칭호 쿠폰 <칭호> - 해당 칭호의 쿠폰 아이템을 받습니다. 우클릭시 칭호를 획득하며 중복 획득은 불가능합니다.");
+                sender.sendMessage(prefix + "/칭호 쿠폰 <칭호> (닉네임) - 해당 칭호의 쿠폰 아이템을 받습니다. 우클릭시 칭호를 획득하며 중복 획득은 불가능합니다.");
                 sender.sendMessage(prefix + "/칭호 기본 <칭호> - 해당 칭호를 기본 칭호로 설정하고 접속하는 모든 유저에게 해당 칭호를 지급합니다.");
                 sender.sendMessage(prefix + "/칭호 모든목록 - 모든 칭호 목록을 확인합니다.");
             }
@@ -92,10 +93,22 @@ public class DSPCommand implements CommandExecutor, TabCompleter {
             }
             if (args[0].equals("쿠폰")) {
                 if (args.length == 1) {
-                    sender.sendMessage(prefix + "§c/칭호 쿠폰 <칭호>");
+                    sender.sendMessage(prefix + "§c/칭호 쿠폰 <칭호> (닉네임)");
                     return false;
                 }
-                DSPFunction.getPrefixCoupon(p, args[1]);
+                if(args.length == 2) {
+                    DSPFunction.getPrefixCoupon(p, args[1]);
+                    return false;
+                }
+                if(args.length == 3) {
+                    try{
+                        DSPFunction.getPrefixCoupon(Bukkit.getPlayer(args[2]), args[1]);
+                    }catch (Exception e) {
+                        p.sendMessage(prefix + "해당 플레이어는 존재하지 않습니다.");
+                        return false;
+                    }
+                    return false;
+                }
                 return false;
             }
             if(args[0].equals("기본")) {
