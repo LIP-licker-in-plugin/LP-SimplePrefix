@@ -83,7 +83,7 @@ public class DSPFunction {
 
     public static void equipPrefix(Player p, String name) {
         YamlConfiguration data = plugin.udata.get(p.getUniqueId());
-        if(!(data.getList("Player.PrefixList") == null)) {
+        if(data.getList("Player.PrefixList") != null) {
             try {
                 List<String> list = (List<String>) data.getList("Player.PrefixList");
                 if (list.contains(name)) {
@@ -102,6 +102,8 @@ public class DSPFunction {
                 System.out.println("칭호 장착 오류");
                 p.sendMessage(prefix + "보유중인 칭호가 아닙니다.");
             }
+        }else{
+            p.sendMessage(prefix + "보유중인 칭호가 아닙니다.");
         }
     }
 
