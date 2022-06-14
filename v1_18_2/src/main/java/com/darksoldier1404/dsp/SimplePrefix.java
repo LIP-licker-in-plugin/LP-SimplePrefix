@@ -1,10 +1,11 @@
 package com.darksoldier1404.dsp;
 
+import com.darksoldier1404.dsp.commands.DSPCommand;
+import com.darksoldier1404.dsp.events.DSPEvent;
 import com.darksoldier1404.dppc.DPPCore;
 import com.darksoldier1404.dppc.utils.ColorUtils;
 import com.darksoldier1404.dppc.utils.ConfigUtils;
-import com.darksoldier1404.dsp.commands.DSPCommand;
-import com.darksoldier1404.dsp.events.DSPEvent;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
