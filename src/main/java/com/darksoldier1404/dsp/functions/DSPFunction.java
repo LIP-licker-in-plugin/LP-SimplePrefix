@@ -154,9 +154,10 @@ public class DSPFunction {
             }
             im.setLore(lore);
             item.setItemMeta(im);
-            item = NBT.setStringTag(item, "dsp.prefix", name);
-            p.getInventory().addItem(item);
+            p.getInventory().addItem(NBT.setStringTag(item, "dsp.prefix", name));
             p.sendMessage(ColorUtils.applyColor(prefix) + "칭호 쿠폰을 발급하였습니다.");
+        }else {
+            p.sendMessage(prefix + "존재하지 않는 칭호입니다.");
         }
     }
 

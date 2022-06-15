@@ -1,6 +1,5 @@
 package com.darksoldier1404.dsp;
 
-import com.darksoldier1404.dppc.DPPCore;
 import com.darksoldier1404.dppc.utils.ColorUtils;
 import com.darksoldier1404.dppc.utils.ConfigUtils;
 import com.darksoldier1404.dsp.commands.DSPCommand;
@@ -15,10 +14,8 @@ import java.util.UUID;
 
 @SuppressWarnings("all")
 public class SimplePrefix extends JavaPlugin {
-    public DPPCore core;
     private static SimplePrefix plugin;
-    public YamlConfiguration config;
-    public YamlConfiguration defaultData = new YamlConfiguration();
+    public static YamlConfiguration config;
     public Map<UUID, YamlConfiguration> udata = new HashMap<>();
     public String prefix;
 
@@ -27,7 +24,6 @@ public class SimplePrefix extends JavaPlugin {
     }
 
     public void onEnable() {
-
         plugin = this;
         Plugin pl = getServer().getPluginManager().getPlugin("DPP-Core");
         if(pl == null) {
@@ -36,7 +32,6 @@ public class SimplePrefix extends JavaPlugin {
             plugin.setEnabled(false);
             return;
         }
-        core = (DPPCore) pl;
         config = ConfigUtils.loadDefaultPluginConfig(plugin);
         prefix = ColorUtils.applyColor(config.getString("Settings.prefix"));
 
