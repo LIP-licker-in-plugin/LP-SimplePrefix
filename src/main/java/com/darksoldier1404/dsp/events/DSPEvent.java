@@ -65,8 +65,6 @@ public class DSPEvent implements Listener {
                     }
                 }
             });
-        }else{
-            e.getPlayer().sendMessage("쿠폰이 아님");
         }
     }
 }
