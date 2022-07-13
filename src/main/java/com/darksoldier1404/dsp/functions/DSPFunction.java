@@ -1,5 +1,6 @@
 package com.darksoldier1404.dsp.functions;
 
+import com.darksoldier1404.dppc.api.inventory.DInventory;
 import com.darksoldier1404.dsp.SimplePrefix;
 import com.darksoldier1404.dppc.utils.ColorUtils;
 import com.darksoldier1404.dppc.utils.ConfigUtils;
@@ -11,8 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /*
  this plugin is using net.wesjd.anvilgui.AnvilGUI API
@@ -22,6 +22,7 @@ import java.util.List;
 public class DSPFunction {
     private static final SimplePrefix plugin = SimplePrefix.getInstance();
     public static final String prefix = plugin.prefix;
+    public static final Map<UUID, String> currentEditPrefix = new HashMap<>();
 
     public static void createPrefix(Player p, String name) {
         plugin.config.set("Settings.PrefixList." + name, "설정 필요");
@@ -36,26 +37,8 @@ public class DSPFunction {
     }
 
     public static void openSetPrefixGUI(Player p, String name) {
-        ItemStack item = new ItemStack(Material.valueOf(plugin.config.getString("Settings.couponMaterial")));
-        ItemMeta im = item.getItemMeta();
-        im.setDisplayName(name);
-        item.setItemMeta(im);
-        new AnvilGUI.Builder()
-                .onComplete((player, text) -> {                                    //called when the inventory output slot is clicked
-                    plugin.config.set("Settings.PrefixList." + name, text);
-                    ConfigUtils.savePluginConfig(plugin, plugin.config);
-                    player.sendMessage(prefix + name + "칭호가 설정되었습니다. : " + ColorUtils.applyColor(text));
-                    return AnvilGUI.Response.close();
-                })
-                .preventClose()                                                    //prevents the inventory from being closed
-                .text("보여지게될 칭호를 설정하세요.")                              //sets the text the GUI should start with
-                .itemLeft(item)                      //use a custom item for the first slot
-                .itemRight(null)                     //use a custom item for the second slot
-//                .onLeftInputClick(player -> player.sendMessage("first sword"))     //called when the left input slot is clicked
-//                .onRightInputClick(player -> player.sendMessage("second sword"))   //called when the right input slot is clicked
-                .title(name + " 칭호 설정")                                       //set the title of the GUI (only works in 1.14+)
-                .plugin(plugin)                                          //set the plugin instance
-                .open(p);                                                   //opens the GUI for the player provided
+        currentEditPrefix.put(p.getUniqueId(), name);
+        p.sendMessage(prefix + "설정할 칭호를 채팅으로 입력해주시면 됩니다.");
     }
 
     public static void showAllPrefixList(Player p) {
@@ -70,19 +53,58 @@ public class DSPFunction {
             p.sendMessage(prefix + "칭호가 없습니다.");
             return;
         }
-        p.sendMessage(prefix + "<<< 보유 칭호 목록 >>>");
         List<String> list = (List<String>) plugin.udata.get(p.getUniqueId()).getList("Player.PrefixList");
+        List<ItemStack> prefixs = new ArrayList<>();
         for (String key : list) {
             String s = plugin.config.getString("Settings.PrefixList." + key);
-            if(s != null) {
-                p.sendMessage(prefix + key + " : " + ColorUtils.applyColor(s));
+            if (s != null) {
+                ItemStack item = new ItemStack(Material.PAPER);
+                ItemMeta im = item.getItemMeta();
+                im.setDisplayName(ColorUtils.applyColor(s));
+                im.setLore(Arrays.asList("", "§6클릭하여 해당 칭호로 변경하세요!", "§7Raw Name : " + key));
+                item.setItemMeta(im);
+                prefixs.add(NBT.setStringTag(item, "dsp.prefix", key));
             }
         }
+        DInventory inv = new DInventory(null, "§6보유 칭호 목록", 54, true, plugin);
+        ItemStack pane = NBT.setStringTag(new ItemStack(Material.BLACK_STAINED_GLASS_PANE), "page", "true");
+        ItemStack prev = NBT.setStringTag(new ItemStack(Material.PINK_DYE), "prev", "true");
+        ItemStack current = NBT.setStringTag(new ItemStack(Material.PAPER), "current", "true");
+        ItemMeta im = prev.getItemMeta();
+        im.setDisplayName("이전 페이지");
+        prev.setItemMeta(im);
+        ItemStack next = NBT.setStringTag(new ItemStack(Material.LIME_DYE), "next", "true");
+        im = next.getItemMeta();
+        im.setDisplayName("다음 페이지");
+        next.setItemMeta(im);
+        im = current.getItemMeta();
+        im.setDisplayName("§a현재 페이지: §f" + (inv.getCurrentPage() + 1));
+        current.setItemMeta(im);
+        inv.setPageTools(new ItemStack[]{pane, pane, prev, pane, current, pane, next, pane, pane});
+        inv.setPages(0);
+
+        int count = 0;
+        int maxPages = (int) Math.ceil(prefixs.size() / 45.0);
+        ItemStack[] contents = new ItemStack[45];
+        for (int page = 0; page <= maxPages; page++) {
+            for (int i = 0; i < 45; i++) {
+                try{
+                    contents[i] = prefixs.get(count);
+                }catch (Exception e){
+                    break;
+                }
+                count++;
+            }
+            inv.setPageContent(page, contents);
+            contents = new ItemStack[45];
+        }
+        inv.update();
+        p.openInventory(inv);
     }
 
     public static void equipPrefix(Player p, String name) {
         YamlConfiguration data = plugin.udata.get(p.getUniqueId());
-        if(data.getList("Player.PrefixList") != null) {
+        if (data.getList("Player.PrefixList") != null) {
             try {
                 List<String> list = (List<String>) data.getList("Player.PrefixList");
                 if (list.contains(name)) {
@@ -101,7 +123,7 @@ public class DSPFunction {
                 System.out.println("칭호 장착 오류");
                 p.sendMessage(prefix + "보유중인 칭호가 아닙니다.");
             }
-        }else{
+        } else {
             p.sendMessage(prefix + "보유중인 칭호가 아닙니다.");
         }
     }
@@ -129,9 +151,9 @@ public class DSPFunction {
             return false;
         }
         List<String> list;
-        if(data.getStringList("Player.PrefixList") == null || data.getStringList("Player.PrefixList").isEmpty()) {
+        if (data.getStringList("Player.PrefixList") == null || data.getStringList("Player.PrefixList").isEmpty()) {
             list = new ArrayList<>();
-        }else{
+        } else {
             list = (List<String>) data.getList("Player.PrefixList");
         }
         list.add(name);
@@ -156,7 +178,7 @@ public class DSPFunction {
             item.setItemMeta(im);
             p.getInventory().addItem(NBT.setStringTag(item, "dsp.prefix", name));
             p.sendMessage(ColorUtils.applyColor(prefix) + "칭호 쿠폰을 발급하였습니다.");
-        }else {
+        } else {
             p.sendMessage(prefix + "존재하지 않는 칭호입니다.");
         }
     }
@@ -168,14 +190,14 @@ public class DSPFunction {
         plugin.udata.values().forEach(data -> {
             if (!(data.get("Player.PrefixList") != null && data.getList("Player.PrefixList").contains(name))) {
                 List<String> list;
-                if(data.getStringList("Player.PrefixList") == null || data.getStringList("Player.PrefixList").isEmpty()) {
+                if (data.getStringList("Player.PrefixList") == null || data.getStringList("Player.PrefixList").isEmpty()) {
                     list = new ArrayList<>();
-                }else{
+                } else {
                     list = (List<String>) data.getList("Player.PrefixList");
                 }
                 list.add(name);
                 data.set("Player.PrefixList", list);
-                if(data.getString("Player.Prefix") == null) {
+                if (data.getString("Player.Prefix") == null) {
                     data.set("Player.Prefix", name);
                 }
             }
@@ -190,14 +212,14 @@ public class DSPFunction {
         String name = plugin.config.getString("Settings.DefaultPrefix");
         if (!(data.get("Player.PrefixList") != null && data.getList("Player.PrefixList").contains(name))) {
             List<String> list;
-            if(data.getStringList("Player.PrefixList") == null || data.getStringList("Player.PrefixList").isEmpty()) {
+            if (data.getStringList("Player.PrefixList") == null || data.getStringList("Player.PrefixList").isEmpty()) {
                 list = new ArrayList<>();
-            }else{
+            } else {
                 list = (List<String>) data.getList("Player.PrefixList");
             }
             list.add(name);
             data.set("Player.PrefixList", list);
-            if(data.getString("Player.Prefix") == null) {
+            if (data.getString("Player.Prefix") == null) {
                 data.set("Player.Prefix", name);
             }
         }

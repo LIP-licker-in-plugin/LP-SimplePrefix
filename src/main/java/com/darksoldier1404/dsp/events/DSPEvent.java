@@ -1,5 +1,6 @@
 package com.darksoldier1404.dsp.events;
 
+import com.darksoldier1404.dppc.api.inventory.DInventory;
 import com.darksoldier1404.dsp.SimplePrefix;
 import com.darksoldier1404.dsp.functions.DSPFunction;
 import com.darksoldier1404.dppc.utils.ColorUtils;
@@ -9,6 +10,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -39,6 +41,16 @@ public class DSPEvent implements Listener {
     @EventHandler
     public void onChat(PlayerChatEvent e) {
         Player p = e.getPlayer();
+        if (DSPFunction.currentEditPrefix.containsKey(p.getUniqueId())) {
+            e.setCancelled(true);
+            String name = DSPFunction.currentEditPrefix.get(p.getUniqueId());
+            String prefix = e.getMessage();
+            plugin.config.set("Settings.PrefixList." + name, prefix);
+            ConfigUtils.savePluginConfig(plugin, plugin.config);
+            p.sendMessage(prefix + name + "칭호가 설정되었습니다. : " + ColorUtils.applyColor(prefix));
+            DSPFunction.currentEditPrefix.remove(p.getUniqueId());
+            return;
+        }
         String name = plugin.udata.get(p.getUniqueId()).getString("Player.Prefix") == null ? DSPFunction.giveDefaultPrefix(p) : plugin.udata.get(p.getUniqueId()).getString("Player.Prefix");
         plugin.config.getConfigurationSection("Settings.PrefixList").getKeys(false).forEach(s -> {
             if (s.equals(name)) {
@@ -65,6 +77,22 @@ public class DSPEvent implements Listener {
                     }
                 }
             });
+        }
+    }
+
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent e) {
+        if (e.getInventory() instanceof DInventory) {
+            DInventory inv = (DInventory) e.getInventory();
+            if (inv.isValidHandler(plugin)) {
+                e.setCancelled(true);
+                if (e.getCurrentItem() != null) {
+                    if (NBT.hasTagKey(e.getCurrentItem(), "dsp.prefix")) {
+                        String name = NBT.getStringTag(e.getCurrentItem(), "dsp.prefix");
+                        DSPFunction.equipPrefix((Player) e.getWhoClicked(), name);
+                    }
+                }
+            }
         }
     }
 }
