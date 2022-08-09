@@ -1,11 +1,10 @@
 package com.darksoldier1404.dsp.functions;
 
 import com.darksoldier1404.dppc.api.inventory.DInventory;
-import com.darksoldier1404.dsp.SimplePrefix;
 import com.darksoldier1404.dppc.utils.ColorUtils;
 import com.darksoldier1404.dppc.utils.ConfigUtils;
 import com.darksoldier1404.dppc.utils.NBT;
-import net.wesjd.anvilgui.AnvilGUI;
+import com.darksoldier1404.dsp.SimplePrefix;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -14,10 +13,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
-/*
- this plugin is using net.wesjd.anvilgui.AnvilGUI API
- XD
- */
 @SuppressWarnings("all")
 public class DSPFunction {
     private static final SimplePrefix plugin = SimplePrefix.getInstance();

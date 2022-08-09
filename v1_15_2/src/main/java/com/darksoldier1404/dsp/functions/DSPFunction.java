@@ -13,10 +13,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
-/*
- this plugin is using net.wesjd.anvilgui.AnvilGUI API
- XD
- */
 @SuppressWarnings("all")
 public class DSPFunction {
     private static final SimplePrefix plugin = SimplePrefix.getInstance();
