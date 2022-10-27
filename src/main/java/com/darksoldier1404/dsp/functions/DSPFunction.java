@@ -19,6 +19,17 @@ public class DSPFunction {
     public static final String prefix = plugin.prefix;
     public static final Map<UUID, String> currentEditPrefix = new HashMap<>();
 
+    public static void updateCurrentPage(DInventory inv) {
+        ItemStack[] tools = inv.getPageTools();
+        ItemStack item = tools[4];
+        ItemMeta im = item.getItemMeta();
+        im.setDisplayName("§a현재 페이지: §f" + (inv.getCurrentPage() + 1));
+        item.setItemMeta(im);
+        tools[4] = item;
+        inv.setPageTools(tools);
+        inv.update();
+    }
+
     public static void createPrefix(Player p, String name) {
         plugin.config.set("Settings.PrefixList." + name, "설정 필요");
         ConfigUtils.savePluginConfig(plugin, plugin.config);
@@ -79,19 +90,23 @@ public class DSPFunction {
         inv.setPages(0);
 
         int count = 0;
-        int maxPages = (int) Math.ceil(prefixs.size() / 45.0);
+        // get int maxPages it should be start with 0 and if prefixs.size() is can divide 45, maxPages is prefixs.size() / 45 - 1
+        int maxPages = prefixs.size() % 45 == 0 ? prefixs.size() / 45 - 1 : prefixs.size() / 45;
         ItemStack[] contents = new ItemStack[45];
-        for (int page = 0; page <= maxPages; page++) {
-            for (int i = 0; i < 45; i++) {
-                try{
-                    contents[i] = prefixs.get(count);
-                }catch (Exception e){
-                    break;
-                }
-                count++;
+        inv.setPages(maxPages);
+        int page = 0;
+        for (ItemStack item : prefixs) {
+            if (count == 45) {
+                inv.setPageContent(page, contents);
+                contents = new ItemStack[45];
+                count = 0;
+                page++;
             }
+            contents[count] = item;
+            count++;
+        }
+        if(count != 0) {
             inv.setPageContent(page, contents);
-            contents = new ItemStack[45];
         }
         inv.update();
         p.openInventory(inv);
