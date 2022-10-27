@@ -87,6 +87,16 @@ public class DSPEvent implements Listener {
             if (inv.isValidHandler(plugin)) {
                 e.setCancelled(true);
                 if (e.getCurrentItem() != null) {
+                    if(NBT.hasTagKey(e.getCurrentItem(), "next")) {
+                        inv.nextPage();
+                        DSPFunction.updateCurrentPage(inv);
+                        return;
+                    }
+                    if(NBT.hasTagKey(e.getCurrentItem(), "prev")) {
+                        inv.prevPage();
+                        DSPFunction.updateCurrentPage(inv);
+                        return;
+                    }
                     if (NBT.hasTagKey(e.getCurrentItem(), "dsp.prefix")) {
                         String name = NBT.getStringTag(e.getCurrentItem(), "dsp.prefix");
                         DSPFunction.equipPrefix((Player) e.getWhoClicked(), name);

@@ -1,66 +1,39 @@
 plugins {
     id 'java'
-    id 'maven-publish'
 }
+
+group 'com.darksoldier1404'
+version = '1.0.1.55'
 
 compileJava.options.encoding = 'UTF-8'
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
-    sourceCompatibility = JavaVersion.VERSION_1_8
 }
-
-group 'github.com/darksoldier1404'
-version = '1.0.1.55'
 configurations {
-    jar.archiveName = 'DP-SimplePrefix-_' + name + '-' + version + '.jar'
+    jar.archiveName = rootProject.name + '-_' + name + '-' + version + '.jar'
 }
 jar {
     destinationDirectory.set(file("$rootDir/jars"))
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            groupId = 'com.darksoldier1404.dsp'
-            artifactId = rootProject.name
-            version = '1.12-' + version
-            artifact "$rootDir/jars/"+ jar.archiveName
-        }
-    }
-    repositories {
-        maven {
-            url "http://dpp.dpnw.site:8081/repository/dpp-releases/"
-            allowInsecureProtocol = true
-        }
-    }
 }
 
 build {
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 }
+
 repositories {
     mavenCentral()
-    maven { url "https://repo.dmulloy2.net/repository/public/" }
-    maven {
-        url 'https://repo.spring.io/plugins-release/'
-    }
     maven {
         url "http://dpp.dpnw.site:8081/repository/maven-public/"
         allowInsecureProtocol = true
     }
-    maven { url = 'https://repo.codemc.io/repository/maven-snapshots/' }
 }
 
 dependencies {
-    implementation 'org.jetbrains:annotations:20.1.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
-    compileOnly 'org.spigotmc:spigot:1.12.2-R0.1-SNAPSHOT'
+    implementation 'org.jetbrains:annotations:23.0.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    compileOnly 'org.bukkit.craftbukkit:craftbukkit:R0.1:1.12.2'
+    compileOnly 'org.spigotmc:spigot-api:R0.1:1.12.2'
     compileOnly 'com.darksoldier1404.dppc:DPP-Core:1.12.2-SNAPSHOT'
-    compileOnly 'net.wesjd:anvilgui:1.5.3-SNAPSHOT'
-}
-
-test {
-    useJUnitPlatform()
 }
