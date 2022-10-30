@@ -31,6 +31,10 @@ public class DSPFunction {
     }
 
     public static void createPrefix(Player p, String name) {
+        if(plugin.config.get("Prefix.PrefixList." + name) != null) {
+            p.sendMessage(prefix + "§c이미 존재하는 칭호 이름입니다.");
+            return;
+        }
         plugin.config.set("Settings.PrefixList." + name, "설정 필요");
         ConfigUtils.savePluginConfig(plugin, plugin.config);
         p.sendMessage(prefix + name + " 칭호가 생성되었습니다.");
