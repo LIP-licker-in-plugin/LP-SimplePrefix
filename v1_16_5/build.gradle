@@ -10,7 +10,7 @@ tasks.withType(JavaCompile) {
 }
 
 group 'github.com/darksoldier1404'
-version = '1.0.1.56'
+version = '1.0.1.57'
 configurations {
     jar.archiveName = 'DP-SimplePrefix-_' + name + '-' + version + '.jar'
 }
@@ -40,10 +40,15 @@ build {
     targetCompatibility = 1.8
 }
 repositories {
-    mavenCentral()
-    maven {
-        url "http://dpp.dpnw.site:8081/repository/maven-public/"
-        allowInsecureProtocol = true
+    mavenCentral()        
+        
+          maven {
+            url "http://feather-s.kr:8083/repository/maven-release/"
+            allowInsecureProtocol = true
+    }
+     maven {
+            url "http://feather-s.kr:8083/repository/dpp-release/"
+            allowInsecureProtocol = true
     }
 }
 

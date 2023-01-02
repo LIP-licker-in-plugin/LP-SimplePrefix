@@ -91,5 +91,15 @@
       <option name="name" value="maven4" />
       <option name="url" value="https://repo.codemc.io/repository/maven-public/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven" />
+      <option name="name" value="maven" />
+      <option name="url" value="http://feather-s.kr:8083/repository/maven-release/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven2" />
+      <option name="name" value="maven2" />
+      <option name="url" value="http://feather-s.kr:8083/repository/dpp-release/" />
+    </remote-repository>
   </component>
 </project>
