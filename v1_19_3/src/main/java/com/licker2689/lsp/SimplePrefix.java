@@ -15,6 +15,7 @@ import java.util.UUID;
 @SuppressWarnings("all")
 public class SimplePrefix extends JavaPlugin {
     private static SimplePrefix plugin;
+    //도미도미 팔닥팔닥
     public static YamlConfiguration config;
     public Map<UUID, YamlConfiguration> udata = new HashMap<>();
     public String prefix;
