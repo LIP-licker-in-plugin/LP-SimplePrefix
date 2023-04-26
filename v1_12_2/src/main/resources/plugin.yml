@@ -1,9 +1,9 @@
-name: DP-SimplePrefix
-version: 1.0.1.57
-main: com.darksoldier1404.dsp.SimplePrefix
+name: LP-SimplePrefix
+version: 1.0.0.7
+main: com.licker2689.lsp.SimplePrefix
 api-version: 1.12
-authors: [ DEAD_POOLIO_ ]
+authors: [ licker2689 ]
 depend:
-  - DPP-Core
+  - LP-Core
 commands:
-  칭호:
+  移��샇:

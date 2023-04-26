@@ -1,4 +1,4 @@
-name: DP-SimplePrefix
+name: LP-SimplePrefix
 on:
   push:
 jobs:
